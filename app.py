@@ -14,10 +14,19 @@ def upload_excel():
         return jsonify({"error": "No file uploaded"}), 400
 
     file = request.files["file"]
-    excel_data = pd.read_excel(file, sheet_name=None)
-    report = generate_report(excel_data)
 
-    return jsonify(report)
+    excel_data = pd.read_excel(
+        file,
+        sheet_name=None,
+        engine="openpyxl"
+    )
+
+    eda_result = generate_report(excel_data)
+
+    return render_template(
+        "result.html",
+        eda=eda_result
+    )
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    app.run(debug=True)

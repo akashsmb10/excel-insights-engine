@@ -1,14 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Excel Insights Engine</title>
+    <title>Excel Insights Report</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background: #f4f4f4; }
+        h2 { color: #2c3e50; }
+    </style>
 </head>
 <body>
-    <h2>Upload Excel File</h2>
-    <form action="/upload-excel" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" required>
-        <br><br>
-        <button type="submit">Generate Insights</button>
-    </form>
+
+<h1>📊 Excel Insights – EDA Report</h1>
+
+<h2>Dataset Info</h2>
+<p><b>Rows:</b> {{ eda.rows }}</p>
+<p><b>Columns:</b> {{ eda.columns }}</p>
+
+<h2>Missing Values</h2>
+<table>
+<tr><th>Column</th><th>Missing Count</th></tr>
+{% for col, val in eda.missing_values.items() %}
+<tr>
+    <td>{{ col }}</td>
+    <td>{{ val }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>Summary Statistics</h2>
+{% if eda.summary %}
+    {% for col, stats in eda.summary.items() %}
+        <h3>{{ col }}</h3>
+        <table>
+        {% for k, v in stats.items() %}
+        <tr>
+            <td>{{ k }}</td>
+            <td>{{ v if v is not none and v == v else "N/A" }}</td>
+        </tr>
+        {% endfor %}
+        </table>
+    {% endfor %}
+{% else %}
+    <p>No summary statistics available.</p>
+{% endif %}
+
 </body>
 </html>
