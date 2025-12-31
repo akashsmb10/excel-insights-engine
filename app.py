@@ -11,22 +11,21 @@ def home():
 @app.route("/upload-excel", methods=["POST"])
 def upload_excel():
     if "file" not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
+        return "No file uploaded", 400
 
     file = request.files["file"]
 
-    excel_data = pd.read_excel(
-        file,
-        sheet_name=None,
-        engine="openpyxl"
-    )
+    # Read Excel
+    excel_data = pd.read_excel(file, sheet_name=None, engine="openpyxl")
 
-    eda_result = generate_report(excel_data)
+    # Generate EDA
+    report = generate_report(excel_data)
 
+    # Render HTML
     return render_template(
         "result.html",
-        eda=eda_result
+        eda=report
     )
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
