@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template
 import pandas as pd
 from insights.report import generate_report
 
@@ -11,21 +11,23 @@ def home():
 @app.route("/upload-excel", methods=["POST"])
 def upload_excel():
     if "file" not in request.files:
-        return "No file uploaded", 400
+        return "No file part in request", 400
 
     file = request.files["file"]
 
-    # Read Excel
+    if file.filename == "":
+        return "No file selected", 400
+
+    if not file.filename.endswith((".xls", ".xlsx")):
+        return "Invalid file type. Upload Excel file only.", 400
+
+    # Read Excel (all sheets)
     excel_data = pd.read_excel(file, sheet_name=None, engine="openpyxl")
 
-    # Generate EDA
+    # Generate EDA report
     report = generate_report(excel_data)
 
-    # Render HTML
-    return render_template(
-        "result.html",
-        eda=report
-    )
+    return render_template("result.html", eda=report)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

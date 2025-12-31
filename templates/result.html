@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excel Insights Report</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background: #f4f4f4; }
+        h2 { color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<h1>📊 Excel Insights – EDA Report</h1>
+
+<h2>Dataset Info</h2>
+<p><b>Rows:</b> {{ eda.rows }}</p>
+<p><b>Columns:</b> {{ eda.columns }}</p>
+
+<h2>Missing Values</h2>
+<table>
+<tr><th>Column</th><th>Missing Count</th></tr>
+{% for col, val in eda.missing_values.items() %}
+<tr>
+    <td>{{ col }}</td>
+    <td>{{ val }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2>Summary Statistics</h2>
+{% for col, stats in eda.summary.items() %}
+<h3>{{ col }}</h3>
+<table>
+{% for k, v in stats.items() %}
+<tr>
+    <td>{{ k }}</td>
+    <td>{{ v }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endfor %}
+
+</body>
+</html>
