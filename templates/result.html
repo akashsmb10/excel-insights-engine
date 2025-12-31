@@ -1,45 +1,98 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Excel Insights Report</title>
+    <title>Excel Insights – EDA Dashboard</title>
     <style>
-        body { font-family: Arial; padding: 20px; }
-        table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
-        th, td { border: 1px solid #ccc; padding: 8px; }
-        th { background: #f4f4f4; }
-        h2 { color: #2c3e50; }
+        body { font-family: "Segoe UI", Arial; background: #f5f7fa; padding: 20px; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 40px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 30px; }
+        .stats { display: flex; gap: 20px; margin-bottom: 20px; }
+        .stat-box { flex: 1; background: #ecf0f1; padding: 15px; border-radius: 8px; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; }
+        th { background: #34495e; color: white; }
+        img { width: 100%; max-width: 700px; border-radius: 8px; margin-top: 15px; }
+        h2 { color: #2980b9; margin-top: 30px; }
+        h3 { color: #34495e; margin-top: 20px; }
     </style>
 </head>
 <body>
+<h1>📊 Excel Insights – Full EDA</h1>
 
-<h1>📊 Excel Insights – EDA Report</h1>
+{% for sheet, data in eda.items() %}
+<div class="card">
 
-<h2>Dataset Info</h2>
-<p><b>Rows:</b> {{ eda.rows }}</p>
-<p><b>Columns:</b> {{ eda.columns }}</p>
+    <h2>📄 Sheet: {{ sheet }}</h2>
 
-<h2>Missing Values</h2>
-<table>
-<tr><th>Column</th><th>Missing Count</th></tr>
-{% for col, val in eda.missing_values.items() %}
-<tr>
-    <td>{{ col }}</td>
-    <td>{{ val }}</td>
-</tr>
-{% endfor %}
-</table>
+    <!-- Overview -->
+    <div class="stats">
+        <div class="stat-box"><h3>{{ data.rows }}</h3><p>Total Rows</p></div>
+        <div class="stat-box"><h3>{{ data.columns }}</h3><p>Total Columns</p></div>
+        <div class="stat-box"><h3>{{ data.memory_usage }}</h3><p>Memory Usage</p></div>
+        <div class="stat-box"><h3>{{ data.duplicates }}</h3><p>Duplicate Rows</p></div>
+    </div>
 
-<h2>Summary Statistics</h2>
-{% for col, stats in eda.summary.items() %}
-<h3>{{ col }}</h3>
-<table>
-{% for k, v in stats.items() %}
-<tr>
-    <td>{{ k }}</td>
-    <td>{{ v }}</td>
-</tr>
-{% endfor %}
-</table>
+    <!-- Sample Data -->
+    <h3>📝 Sample Data</h3>
+    <table>
+        <tr>{% for col in data.sample[0].keys() %}<th>{{ col }}</th>{% endfor %}</tr>
+        {% for row in data.sample %}
+        <tr>{% for val in row.values() %}<td>{{ val }}</td>{% endfor %}</tr>
+        {% endfor %}
+    </table>
+
+    <!-- Missing Values -->
+    <h3>🔍 Missing Values</h3>
+    <table>
+        <tr><th>Column</th><th>Missing Count</th><th>Missing %</th></tr>
+        {% for col, val in data.missing_values.items() %}
+        <tr>
+            <td>{{ col }}</td>
+            <td>{{ val }}</td>
+            <td>{{ data.missing_percentage[col] }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Numeric Summary -->
+    <h3>📈 Numeric Summary</h3>
+    {% for col, stats in data.summary_numeric.items() %}
+        <h4>{{ col }}</h4>
+        <table>
+        {% for stat, val in stats.items() %}
+            <tr><td>{{ stat }}</td><td>{{ val }}</td></tr>
+        {% endfor %}
+        </table>
+    {% endfor %}
+
+    <!-- Categorical Summary -->
+    <h3>📊 Categorical Summary</h3>
+    {% for col, stats in data.summary_categorical.items() %}
+        <h4>{{ col }}</h4>
+        <table>
+        {% for stat, val in stats.items() %}
+            <tr><td>{{ stat }}</td><td>{{ val }}</td></tr>
+        {% endfor %}
+        </table>
+    {% endfor %}
+
+    <!-- Outliers -->
+    <h3>⚠️ Outliers (IQR method)</h3>
+    <table>
+        <tr><th>Column</th><th>Outlier Count</th></tr>
+        {% for col, val in data.outliers.items() %}
+        <tr><td>{{ col }}</td><td>{{ val }}</td></tr>
+        {% endfor %}
+    </table>
+
+    <!-- Plots -->
+    <h3>📊 Visual Analysis</h3>
+    {% for key, plot in data.plots.items() %}
+        <h4>{{ key.replace('_',' ').title() }}</h4>
+        <img src="/{{ plot }}" alt="{{ key }}">
+    {% endfor %}
+
+</div>
 {% endfor %}
 
 </body>

@@ -11,7 +11,7 @@ def home():
 @app.route("/upload-excel", methods=["POST"])
 def upload_excel():
     if "file" not in request.files:
-        return "No file part in request", 400
+        return "No file uploaded", 400
 
     file = request.files["file"]
 
@@ -24,9 +24,10 @@ def upload_excel():
     # Read Excel (all sheets)
     excel_data = pd.read_excel(file, sheet_name=None, engine="openpyxl")
 
-    # Generate EDA report
+    # Generate full EDA
     report = generate_report(excel_data)
 
+    # Render professional report
     return render_template("result.html", eda=report)
 
 if __name__ == "__main__":

@@ -1,51 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Excel Insights Engine</title>
+    <title>Excel Insights – Upload</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f6fa;
-            padding: 40px;
-            text-align: center;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        form {
-            background: white;
-            padding: 30px;
-            display: inline-block;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        input[type="file"] {
-            margin: 15px 0;
-        }
-        button {
-            padding: 10px 25px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #2980b9;
-        }
+        body { font-family: Arial; padding: 50px; text-align: center; background: #f5f7fa; }
+        h1 { color: #2c3e50; margin-bottom: 40px; }
+        input[type=file] { padding: 10px; border-radius: 8px; border: 1px solid #ccc; }
+        input[type=submit] { padding: 10px 20px; border-radius: 8px; border: none; background: #2980b9; color: white; cursor: pointer; margin-top: 20px; }
+        input[type=submit]:hover { background: #3498db; }
+        .card { background: white; padding: 20px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
-
-<h1>📊 Excel Insights Engine</h1>
-<p>Upload an Excel file to generate an EDA report</p>
-
-<form action="/upload-excel" method="POST" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".xlsx,.xls" required>
-    <br>
-    <button type="submit">Generate Report</button>
-</form>
-
+    <div class="card">
+        <h1>📊 Excel Insights Engine</h1>
+        <form action="/upload-excel" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".xlsx,.xls" required><br>
+            <input type="submit" value="Upload & Generate Report">
+        </form>
+        <p>Upload any Excel file to generate a full EDA report with stats and graphs.</p>
+    </div>
 </body>
 </html>
