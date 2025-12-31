@@ -27,11 +27,11 @@ A Flask-based web application that performs **automated Exploratory Data Analysi
 
 ## 📂 Project Structure
 excel-insights-engine/
-│
-├── app.py
-├── requirements.txt
-├── templates/
-├── static/
-│ └── plots/
-├── insights/
-└── README.md
+-│
+-├── app.py
+-├── requirements.txt
+-├── templates/
+-├── static/
+-│ └── plots/
+-├── insights/
+-└── README.md
